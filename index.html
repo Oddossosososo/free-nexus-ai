@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#120204">
+<title>NEXUS AI — Interactive Prank Demo</title>
+<style>
+:root{color-scheme:dark;--bg:#050000;--panel:#120204;--red:#ff2233;--muted:#bba8ac}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:16px;background:radial-gradient(ellipse at top,#26070d 0%,#050000 62%);color:#f4eeee;font:14px ui-monospace,SFMono-Regular,Consolas,monospace}
+.panel{width:min(560px,100%);max-height:96vh;overflow:auto;padding:22px;background:linear-gradient(155deg,#1b070b,#090607 72%);border:1px solid #8d2634;border-radius:12px;box-shadow:0 0 30px #ff223322}
+.topline{display:flex;justify-content:space-between;gap:10px;color:#ff9aa5;font-size:10px;letter-spacing:1.6px}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 9px var(--red);margin-right:7px;animation:pulse 1.3s infinite}
+h1,h2{text-align:center;color:var(--red);letter-spacing:2px;text-shadow:0 0 15px #ff223344}
+h1{font-size:clamp(21px,5vw,30px)}
+h2{font-size:25px;margin:18px 0 8px}
+.subtitle{text-align:center;color:#ad989d;font-size:11px;margin-bottom:18px}
+.notice{padding:10px 12px;border:1px solid #58303a;background:#10090b;color:#d9c2c6;font-size:11px;line-height:1.6;border-radius:5px;margin:12px 0}
+.chatbox{height:180px;overflow:auto;padding:12px;background:#080607;border:1px solid #472028;border-radius:6px}
+.chatmsg{padding:9px 10px;margin-bottom:8px;border-left:2px solid #61232d;background:#170d10;line-height:1.55;overflow-wrap:anywhere}
+.chatmsg .who{display:block;color:#ff7d8c;font-size:10px;letter-spacing:1px;margin-bottom:4px}
+.sendrow{display:flex;gap:8px;margin-top:10px}
+input[type=text]{flex:1;min-width:0;padding:12px;background:#080607;color:white;border:1px solid #56202b;border-radius:5px;font:inherit}
+button{cursor:pointer;padding:10px 13px;border-radius:5px;font:inherit}
+button:disabled{opacity:.45;cursor:not-allowed}
+.primary{color:white;background:#8e1425;border:1px solid #ff5264}
+.secondary{background:#11090b;border:1px solid #59232c;color:#d8bfc3}
+button:hover:not(:disabled){filter:brightness(1.2)}
+.verifycard{padding:16px;background:#f5f3f3;color:#151515;border-radius:6px;margin-top:15px}
+.verifycard p{font-size:12px;line-height:1.55}
+.checkline{display:flex;gap:9px;align-items:flex-start;line-height:1.5;font-size:12px}
+.captcha{display:flex;align-items:center;gap:12px;padding:14px;margin-top:13px;background:white;border:1px solid #c9c9c9;border-radius:4px;color:#111;font:15px Arial,sans-serif}
+.captcha input{width:20px;height:20px}
+.meter{background:#070506;border:1px solid #462027;padding:15px;border-radius:6px;margin:14px 0}
+.meterhead{display:flex;justify-content:space-between;gap:12px;font-size:10px;color:#c9aeb3}
+progress{appearance:none;display:block;width:100%;height:8px;margin-top:12px;border:0;background:#281217}
+progress::-webkit-progress-bar{background:#281217}
+progress::-webkit-progress-value{background:var(--red);box-shadow:0 0 10px #ff223366}
+progress::-moz-progress-bar{background:var(--red)}
+.terminal{height:130px;overflow-y:auto;padding:12px;background:#030303;border:1px solid #422027;color:#ff7886;font-size:11px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}
+.statuspill{display:inline-block;padding:5px 8px;background:#341017;border:1px solid #7c2734;color:#ffb5bd;border-radius:4px;font-size:10px}
+.reveal{padding:14px;margin-top:12px;border:1px solid #34684b;background:#092017;color:#d3f9df;border-radius:6px;font-size:12px;line-height:1.7}
+.hidden{display:none!important}
+.terms{border-top:1px solid #3a1b21;margin-top:20px;padding-top:13px;color:var(--muted);font-size:10px;line-height:1.65}
+.terms-scroll{max-height:210px;overflow-y:auto;background:#090607;border:1px solid #3a1b21;padding:12px}
+.terms h3{font-size:11px;color:#ff929d;margin:12px 0 5px}
+.footer-note{margin-top:10px}
+.shake .panel{animation:shake .45s ease-in-out}
+.flash:after{content:"";position:fixed;inset:0;pointer-events:none;background:#ff1d3040;animation:flash .4s ease-out forwards}
+@keyframes pulse{50%{opacity:.62}}
+@keyframes flash{to{opacity:0}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-3px)}40%{transform:translateX(3px)}60%{transform:translateX(-2px)}80%{transform:translateX(2px)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important}}
+</style>
+</head>
+<body>
+<main class="panel" id="nexusApp">
+  <div class="topline">
+    <span><i class="dot"></i>INTERACTIVE SECURITY DEMO</span>
+    <span id="clock">--:--:--</span>
+  </div>
+  <h2>NEXUS AI</h2>
+  <div class="subtitle">CONVERSATIONAL INTERFACE · PRANK EXPERIENCE</div>
+  <div class="notice">Visual prank with dramatic effects. After you agree below, verification will initiate a real 5 MB ZIP download and a separate README.txt download. No existing files are accessed or changed.</div>
+
+  <section id="chatView">
+    <div id="messages" class="chatbox" role="log" aria-live="polite"></div>
+    <form id="chatForm" class="sendrow">
+      <input id="prompt" type="text" maxlength="300" placeholder="Ask NEXUS something..." required>
+      <button class="primary" type="submit">SEND</button>
+    </form>
+  </section>
+
+  <section id="verifyView" class="hidden">
+    <div class="verifycard">
+      <b>Verification required</b>
+      <p>Review the download details and agree before completing this demonstration check.</p>
+      <label class="checkline"><input id="consent" type="checkbox"> <span>I agree to initiate the download of a 5 MB ZIP containing generated data and README.txt, plus a separate README.txt file.</span></label>
+      <hr style="border:0;border-top:1px solid #ddd;margin:14px 0">
+      <label class="captcha"><input id="captcha" type="checkbox" disabled><span>I'm not a robot</span></label>
+      <p id="verifyStatus">Agree to the download to enable verification.</p>
+    </div>
+  </section>
+
+  <section id="loadingView" class="hidden">
+    <div class="meter">
+      <div class="meterhead"><span id="stageLabel">VERIFYING SESSION</span><span id="loadPercent">0%</span></div>
+      <progress id="loadBar" max="100" value="0"></progress>
+      <p id="loadStatus" style="font-size:12px">Initializing...</p>
+    </div>
+  </section>
+
+  <section id="alertView" class="hidden">
+    <div class="statuspill">VISUAL ALERT SEQUENCE</div>
+    <h1>⚠ NEXUS ALERT ⚠</h1>
+    <p style="color:#d7bfc3;font-size:11px;line-height:1.6">Dramatic visual effects only. NEXUS does not scan your device or change system files.</p>
+    <div class="meter">
+      <div class="meterhead"><span>ARCHIVE PREPARATION</span><span id="filePercent">0%</span></div>
+      <progress id="fileBar" max="100" value="0"></progress>
+      <p id="fileStatus" style="font-size:12px">Preparing the download...</p>
+    </div>
+    <div id="terminal" class="terminal" aria-live="polite"></div>
+    <div id="completeNotice" class="reveal hidden">NEXUS sequence complete. Download requests have been sent to your browser. This is a prank demo; no existing files were accessed or changed.</div>
+    <a id="readmeLink" class="hidden" style="display:block;color:white;margin-top:12px" download="README.txt">Open or download README.txt</a>
+    <button id="mute" class="secondary" style="margin-top:12px">🔊 Mute siren</button>
+  </section>
+
+  <button id="exit" class="secondary" style="width:100%;margin-top:15px">CLOSE NEXUS</button>
+
+  <footer class="terms">
+    <b>NEXUS AI — TERMS OF USE</b>
+    <div class="terms-scroll">
+      <h3>PAGE 1 OF 5 — AGREEMENT</h3>
+      By continuing, you agree to initiate a download consisting of a ZIP archive with generated binary data and README.txt, plus a separate README.txt download. The generated data size is 5 MB, not including the small ZIP headers and README. You can decline by leaving the agreement unchecked and closing this panel.
+      <h3>PAGE 2 OF 5 — DOWNLOADS AND STORAGE</h3>
+      The files are created by this browser session and contain generated data, not copies of your existing documents. The browser controls whether downloads start, are blocked, or require permission. Saved files remain on the device until deleted. Closing NEXUS cannot reliably cancel a download the browser has already accepted.
+      <h3>PAGE 3 OF 5 — PERFORMANCE</h3>
+      Generating an archive requires memory and processing power. The demo is not intended to make your computer lag, freeze, or become unresponsive, but temporary slowdown is possible. The file size is limited to a modest amount. Performance varies between devices and browsers.
+      <h3>PAGE 4 OF 5 — USER CONTROL</h3>
+      Use this demo only on a device you control or where the person using it has agreed to the download. Do not use it to interrupt important work or cause avoidable disruption. You can close NEXUS or mute the sound. Your browser's download protections remain in control.
+      <h3>PAGE 5 OF 5 — LIMITATIONS AND RIGHTS</h3>
+      Downloads may fail, be blocked, or require permission. These terms do not guarantee that errors are impossible or remove rights that applicable law does not allow a person to waive. This page is a browser-based prank demo, not a real security scanner or bot-protection service.
+    </div>
+    <div class="footer-note">Read the download details before agreeing. Your browser controls download behavior.</div>
+  </footer>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  const CONFIG = {
+    FILE_SIZE_MB: 5,
+    ZIP_FILENAME: "NEXUS_DATA.zip",
+    DATA_FILENAME: "NEXUS_DATA.bin",
+    TEXT_FILENAME: "README.txt",
+    MIN_VERIFY_MS: 1200,
+    MAX_VERIFY_MS: 2200,
+    MIN_LOAD_MS: 1800,
+    MAX_LOAD_MS: 2800,
+    SIREN_ENABLED: true,
+    SIREN_VOLUME: 0.025
+  };
+
+  const $ = function (id) { return document.getElementById(id); };
+  const wait = function (ms) { return new Promise(function (resolve) { setTimeout(resolve, ms); }); };
+  const encoder = new TextEncoder();
+  let stopped = false;
+  let running = false;
+  let audio = null;
+  let oscillator = null;
+  let gain = null;
+  let sirenTimer = null;
+  let muted = !CONFIG.SIREN_ENABLED;
+  const objectUrls = [];
+
+  function addMessage(role, text) {
+    const row = document.createElement("div");
+    row.className = "chatmsg";
+    const who = document.createElement("span");
+    who.className = "who";
+    who.textContent = role;
+    const body = document.createElement("span");
+    body.textContent = text;
+    row.append(who, body);
+    $("messages").append(row);
+    $("messages").scrollTop = $("messages").scrollHeight;
+  }
+
+  function log(text) {
+    $("terminal").textContent += text + "\n";
+    $("terminal").scrollTop = $("terminal").scrollHeight;
+  }
+
+  function randomTime(min, max) {
+    return min + Math.random() * (max - min);
+  }
+
+  addMessage("NEXUS AI", "Hello. What would you like help with?");
+
+  const replies = [
+    "Request received. Let's continue after verification.",
+    "I have your message. Please complete the demo verification.",
+    "Processing your request. Verification is required to continue.",
+    "Ready to continue. Please complete the verification step."
+  ];
+
+  // ZIP CRC-32 table.
+  const crcTable = (function () {
+    const table = new Uint32Array(256);
+    for (let n = 0; n < 256; n++) {
+      let c = n;
+      for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1;
+      table[n] = c >>> 0;
+    }
+    return table;
+  })();
+
+  function updateCRC(crc, data) {
+    for (const byte of data) crc = crcTable[(crc ^ byte) & 255] ^ (crc >>> 8);
+    return crc >>> 0;
+  }
+
+  function crc32(data) {
+    return (updateCRC(0xFFFFFFFF, data) ^ 0xFFFFFFFF) >>> 0;
+  }
+
+  function set16(view, offset, value) {
+    view.setUint16(offset, value, true);
+  }
+
+  function set32(view, offset, value) {
+    view.setUint32(offset, value >>> 0, true);
+  }
+
+  function localHeader(name, size, crc) {
+    const bytes = new Uint8Array(30 + name.length);
+    const view = new DataView(bytes.buffer);
+    set32(view, 0, 0x04034B50);
+    set16(view, 4, 20);
+    set16(view, 6, 0x0800);
+    set16(view, 8, 0);
+    set16(view, 10, 0);
+    set16(view, 12, 0x21);
+    set32(view, 14, crc);
+    set32(view, 18, size);
+    set32(view, 22, size);
+    set16(view, 26, name.length);
+    set16(view, 28, 0);
+    bytes.set(name, 30);
+    return bytes;
+  }
+
+  function centralHeader(entry) {
+    const bytes = new Uint8Array(46 + entry.name.length);
+    const view = new DataView(bytes.buffer);
+    set32(view, 0, 0x02014B50);
+    set16(view, 4, 20);
+    set16(view, 6, 20);
+    set16(view, 8, 0x0800);
+    set16(view, 10, 0);
+    set16(view, 12, 0);
+    set16(view, 14, 0x21);
+    set32(view, 16, entry.crc);
+    set32(view, 20, entry.size);
+    set32(view, 24, entry.size);
+    set16(view, 28, entry.name.length);
+    set16(view, 30, 0);
+    set16(view, 32, 0);
+    set16(view, 34, 0);
+    set16(view, 36, 0);
+    set32(view, 38, 0);
+    set32(view, 42, entry.offset);
+    bytes.set(entry.name, 46);
+    return bytes;
+  }
+
+  function endRecord(count, directorySize, directoryOffset) {
+    const bytes = new Uint8Array(22);
+    const view = new DataView(bytes.buffer);
+    set32(view, 0, 0x06054B50);
+    set16(view, 4, 0);
+    set16(view, 6, 0);
+    set16(view, 8, count);
+    set16(view, 10, count);
+    set32(view, 12, directorySize);
+    set32(view, 16, directoryOffset);
+    set16(view, 20, 0);
+    return bytes;
+  }
+
+  function randomBytes(length) {
+    const bytes = new Uint8Array(length);
+    for (let i = 0; i < length; i += 65536) {
+      crypto.getRandomValues(bytes.subarray(i, Math.min(i + 65536, length)));
+    }
+    return bytes;
+  }
+
+  async function buildFiles() {
+    const totalBytes = CONFIG.FILE_SIZE_MB * 1000000;
+    const chunks = [];
+    let crc = 0xFFFFFFFF;
+    let written = 0;
+
+    while (written < totalBytes) {
+      if (stopped) throw new Error("Cancelled");
+      const size = Math.min(500000, totalBytes - written);
+      const chunk = randomBytes(size);
+      chunks.push(chunk);
+      crc = updateCRC(crc, chunk);
+      written += size;
+      const percent = Math.floor(written / totalBytes * 65);
+      $("fileBar").value = percent;
+      $("filePercent").textContent = percent + "%";
+      $("fileStatus").textContent = "Generating archive data: " +
+        Math.floor(written / totalBytes * 100) + "%";
+      await wait(0);
+    }
+
+    const payloadCRC = (crc ^ 0xFFFFFFFF) >>> 0;
+    const readmeText =
+      "NEXUS AI — GENERATED DATA\n" +
+      "=========================\n\n" +
+      "This ZIP contains generated binary data.\n" +
+      "Data file: " + CONFIG.DATA_FILENAME + "\n" +
+      "Payload size: " + totalBytes.toLocaleString() + " bytes\n\n" +
+      "This is generated data, not an executable program.\n" +
+      "No existing files are included or modified.\n";
+    const readme = encoder.encode(readmeText);
+    const dataName = encoder.encode(CONFIG.DATA_FILENAME);
+    const textName = encoder.encode(CONFIG.TEXT_FILENAME);
+    const header1 = localHeader(dataName, totalBytes, payloadCRC);
+    const header2 = localHeader(textName, readme.length, crc32(readme));
+    const offset2 = header1.length + totalBytes;
+
+    const entries = [
+      { name: dataName, crc: payloadCRC, size: totalBytes, offset: 0 },
+      { name: textName, crc: crc32(readme), size: readme.length, offset: offset2 }
+    ];
+    const centralParts = entries.map(centralHeader);
+    const centralOffset = header1.length + totalBytes + header2.length + readme.length;
+    const centralSize = centralParts.reduce(function (sum, part) { return sum + part.length; }, 0);
+
+    const zip = new Blob([
+      header1, ...chunks, header2, readme, ...centralParts,
+      endRecord(entries.length, centralSize, centralOffset)
+    ], { type: "application/zip" });
+
+    const txt = new Blob([readme], { type: "text/plain;charset=utf-8" });
+    return { zip: zip, txt: txt };
+  }
+
+  function triggerDownload(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    objectUrls.push(url);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    link.style.display = "none";
+    document.body.append(link);
+    link.click();
+    link.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 60000);
+    return url;
+  }
+
+  function prepareAudio() {
+    if (!CONFIG.SIREN_ENABLED) return;
+    const Audio = window.AudioContext || window.webkitAudioContext;
+    if (!Audio) return;
+    try {
+      audio = new Audio();
+      audio.resume().catch(function () {});
+    } catch (_) {}
+  }
+
+  function startSiren() {
+    if (muted || !audio || oscillator || stopped) return;
+    try {
+      oscillator = audio.createOscillator();
+      gain = audio.createGain();
+      oscillator.type = "sawtooth";
+      oscillator.frequency.value = 880;
+      gain.gain.value = CONFIG.SIREN_VOLUME;
+      oscillator.connect(gain);
+      gain.connect(audio.destination);
+      oscillator.start();
+      let high = true;
+      sirenTimer = setInterval(function () {
+        if (!audio || !oscillator || stopped) return;
+        high = !high;
+        oscillator.frequency.setTargetAtTime(high ? 880 : 560, audio.currentTime, 0.1);
+      }, 450);
+    } catch (_) {}
+  }
+
+  async function stopSiren() {
+    clearInterval(sirenTimer);
+    sirenTimer = null;
+    try { oscillator && oscillator.stop(); } catch (_) {}
+    oscillator = null;
+    try { if (audio) await audio.close(); } catch (_) {}
+    audio = null;
+  }
+
+  $("chatForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+    if (running || stopped) return;
+    const prompt = $("prompt").value.trim();
+    if (!prompt) return;
+    addMessage("YOU", prompt);
+    $("prompt").value = "";
+    addMessage("NEXUS AI", replies[Math.floor(Math.random() * replies.length)]);
+    $("verifyView").classList.remove("hidden");
+    $("verifyStatus").textContent = "Review the download details, agree, then complete verification.";
+    $("captcha").disabled = !$("consent").checked;
+  });
+
+  $("consent").addEventListener("change", function () {
+    $("captcha").disabled = !$("consent").checked;
+    $("verifyStatus").textContent = $("consent").checked
+      ? "You can now complete the demo verification."
+      : "Agree to the download before enabling verification.";
+    if (!$("consent").checked) $("captcha").checked = false;
+  });
+
+  $("captcha").addEventListener("change", async function () {
+    if (!$("captcha").checked || running || stopped) return;
+    if (!$("consent").checked) {
+      $("captcha").checked = false;
+      return;
+    }
+
+    running = true;
+    $("captcha").disabled = true;
+    $("consent").disabled = true;
+    $("chatView").classList.add("hidden");
+    $("verifyView").classList.add("hidden");
+    $("loadingView").classList.remove("hidden");
+    prepareAudio();
+
+    const verifyDuration = randomTime(CONFIG.MIN_VERIFY_MS, CONFIG.MAX_VERIFY_MS);
+    const verifyStart = performance.now();
+    while (!stopped && performance.now() - verifyStart < verifyDuration) {
+      const pct = Math.min(99, Math.round((performance.now() - verifyStart) / verifyDuration * 100));
+      $("loadStatus").textContent = "Verifying... " + pct + "%";
+      $("loadPercent").textContent = pct + "%";
+      $("loadBar").value = pct;
+      await wait(50);
+    }
+    if (stopped) return;
+
+    const loadDuration = randomTime(CONFIG.MIN_LOAD_MS, CONFIG.MAX_LOAD_MS);
+    const loadStart = performance.now();
+    while (!stopped && performance.now() - loadStart < loadDuration) {
+      const pct = Math.min(100, Math.round((performance.now() - loadStart) / loadDuration * 100));
+      $("stageLabel").textContent = "INITIALIZING NEXUS";
+      $("loadStatus").textContent = "Loading visual sequence...";
+      $("loadPercent").textContent = pct + "%";
+      $("loadBar").value = pct;
+      await wait(40);
+    }
+    if (stopped) return;
+
+    $("loadingView").classList.add("hidden");
+    $("alertView").classList.remove("hidden");
+    startSiren();
+
+    // Three pre-download status messages, then the download.
+    const steps = [
+      "[1/3] Verification completed.",
+      "[2/3] Preparing the NEXUS ZIP archive.",
+      "[3/3] Finalizing generated files."
+    ];
+
+    for (const step of steps) {
+      if (stopped) return;
+      log(step);
+      $("fileStatus").textContent = step.replace(/^\[\d\/3\] /, "");
+      await wait(550);
+    }
+
+    try {
+      const files = await buildFiles();
+      if (stopped) return;
+
+      $("fileStatus").textContent = "Requesting ZIP download...";
+      $("fileBar").value = 85;
+      $("filePercent").textContent = "85%";
+      triggerDownload(files.zip, CONFIG.ZIP_FILENAME);
+
+      await wait(450);
+      if (stopped) return;
+
+      const textUrl = triggerDownload(files.txt, CONFIG.TEXT_FILENAME);
+      $("readmeLink").href = textUrl;
+      $("readmeLink").classList.remove("hidden");
+
+      $("fileBar").value = 100;
+      $("filePercent").textContent = "100%";
+      $("fileStatus").textContent =
+        "Download requests sent. Your browser may block additional automatic downloads.";
+      $("completeNotice").classList.remove("hidden");
+      await stopSiren();
+    } catch (error) {
+      if (!stopped) {
+        $("fileStatus").textContent = "Could not generate the download.";
+        log("Download error: " + error.message);
+        await stopSiren();
+      }
+    }
+  });
+
+  $("mute").addEventListener("click", function () {
+    muted = !muted;
+    if (muted) {
+      if (audio) audio.suspend().catch(function () {});
+      $("mute").textContent = "🔇 Unmute siren";
+    } else {
+      if (audio) audio.resume().catch(function () {});
+      startSiren();
+      $("mute").textContent = "🔊 Mute siren";
+    }
+  });
+
+  $("exit").addEventListener("click", async function () {
+    stopped = true;
+    await stopSiren();
+    app.remove();
+  });
+
+  function updateClock() {
+    $("clock").textContent = new Date().toLocaleTimeString();
+  }
+  updateClock();
+  const clockTimer = setInterval(function () {
+    if (!document.body.contains(app)) {
+      clearInterval(clockTimer);
+      return;
+    }
+    updateClock();
+  }, 1000);
+})();
+</script>
+</body>
+</html>
