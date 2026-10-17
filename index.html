@@ -62,7 +62,7 @@ progress::-moz-progress-bar{background:var(--red)}
   </div>
   <h2>NEXUS AI</h2>
   <div class="subtitle">CONVERSATIONAL INTERFACE · PRANK EXPERIENCE</div>
-  <div class="notice">Visual prank with dramatic effects. After you agree below, verification will initiate a real 5 MB ZIP download and a separate README.txt download. No existing files are accessed or changed.</div>
+  <div class="notice">Visual prank with dramatic effects. After you agree below, verification will initiate a real <strong id="noticeSize">5 MB</strong> ZIP download and a separate README.txt download. No existing files are accessed or changed.</div>
 
   <section id="chatView">
     <div id="messages" class="chatbox" role="log" aria-live="polite"></div>
@@ -72,11 +72,20 @@ progress::-moz-progress-bar{background:var(--red)}
     </form>
   </section>
 
+  <section id="adminPanel" class="hidden" style="margin-top:14px;padding:14px;background:#090607;border:1px dashed #ff5264;border-radius:6px">
+    <b style="color:#ff929d;letter-spacing:1px">NEXUS ADMIN SETTINGS</b>
+    <p style="font-size:11px;line-height:1.6;color:#d9c2c6">Choose a generated ZIP payload size from 1 to 25 MB. Applying a new size resets any previous agreement so the displayed terms stay accurate.</p>
+    <label for="adminSize" style="display:block;font-size:12px;margin:10px 0">ZIP data size (MB)</label>
+    <input id="adminSize" type="number" min="1" max="25" step="1" value="5" style="width:100%;padding:10px;background:#080607;color:white;border:1px solid #56202b;border-radius:5px;font:inherit">
+    <button id="applyAdminSize" type="button" class="secondary" style="margin-top:10px">APPLY SIZE</button>
+    <p id="adminStatus" aria-live="polite" style="font-size:11px;color:#ffb8c0;margin-bottom:0">Current size: 5 MB.</p>
+  </section>
+
   <section id="verifyView" class="hidden">
     <div class="verifycard">
       <b>Verification required</b>
       <p>Review the download details and agree before completing this demonstration check.</p>
-      <label class="checkline"><input id="consent" type="checkbox"> <span>I agree to initiate the download of a 5 MB ZIP containing generated data and README.txt, plus a separate README.txt file.</span></label>
+      <label class="checkline"><input id="consent" type="checkbox"> <span>I agree to initiate the download of a <strong id="consentSize">5 MB</strong> ZIP containing generated data and README.txt, plus a separate README.txt file.</span></label>
       <hr style="border:0;border-top:1px solid #ddd;margin:14px 0">
       <label class="captcha"><input id="captcha" type="checkbox" disabled><span>I'm not a robot</span></label>
       <p id="verifyStatus">Agree to the download to enable verification.</p>
@@ -112,7 +121,7 @@ progress::-moz-progress-bar{background:var(--red)}
     <b>NEXUS AI — TERMS OF USE</b>
     <div class="terms-scroll">
       <h3>PAGE 1 OF 5 — AGREEMENT</h3>
-      By continuing, you agree to initiate a download consisting of a ZIP archive with generated binary data and README.txt, plus a separate README.txt download. The generated data size is 5 MB, not including the small ZIP headers and README. You can decline by leaving the agreement unchecked and closing this panel.
+      By continuing, you agree to initiate a download consisting of a ZIP archive with generated binary data and README.txt, plus a separate README.txt download. The generated data size is <strong id="termsSize">5 MB</strong>, not including the small ZIP headers and README. You can decline by leaving the agreement unchecked and closing this panel.
       <h3>PAGE 2 OF 5 — DOWNLOADS AND STORAGE</h3>
       The files are created by this browser session and contain generated data, not copies of your existing documents. The browser controls whether downloads start, are blocked, or require permission. Saved files remain on the device until deleted. Closing NEXUS cannot reliably cancel a download the browser has already accepted.
       <h3>PAGE 3 OF 5 — PERFORMANCE</h3>
@@ -131,6 +140,7 @@ progress::-moz-progress-bar{background:var(--red)}
   "use strict";
   const CONFIG = {
     FILE_SIZE_MB: 5,
+    MAX_FILE_SIZE_MB: 25, // Admin picker safety cap
     ZIP_FILENAME: "NEXUS_DATA.zip",
     DATA_FILENAME: "NEXUS_DATA.bin",
     TEXT_FILENAME: "README.txt",
@@ -278,6 +288,9 @@ progress::-moz-progress-bar{background:var(--red)}
   }
 
   async function buildFiles() {
+    if (!Number.isInteger(CONFIG.FILE_SIZE_MB) || CONFIG.FILE_SIZE_MB < 1 || CONFIG.FILE_SIZE_MB > CONFIG.MAX_FILE_SIZE_MB) {
+      throw new Error("File size must be between 1 and " + CONFIG.MAX_FILE_SIZE_MB + " MB.");
+    }
     const totalBytes = CONFIG.FILE_SIZE_MB * 1000000;
     const chunks = [];
     let crc = 0xFFFFFFFF;
@@ -383,6 +396,86 @@ progress::-moz-progress-bar{background:var(--red)}
     try { if (audio) await audio.close(); } catch (_) {}
     audio = null;
   }
+
+  // Secret local UI shortcut: press Ctrl+B, then type "fireeadmin".
+  // It only reveals the size picker; downloaded sizes remain capped at 25 MB.
+  let adminEntryActive = false;
+  let adminBuffer = "";
+  let adminEntryTimer = null;
+  const adminPhrase = "fireeadmin";
+
+  function updateDisplayedSize(size) {
+    $("noticeSize").textContent = size + " MB";
+    $("consentSize").textContent = size + " MB";
+    $("termsSize").textContent = size + " MB";
+  }
+
+  window.addEventListener("keydown", function (event) {
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "b") {
+      event.preventDefault();
+      adminEntryActive = true;
+      adminBuffer = "";
+      clearTimeout(adminEntryTimer);
+      adminEntryTimer = setTimeout(function () {
+        adminEntryActive = false;
+        adminBuffer = "";
+      }, 10000);
+      return;
+    }
+
+    if (!adminEntryActive || event.ctrlKey || event.altKey || event.metaKey) return;
+
+    if (event.key === "Escape") {
+      adminEntryActive = false;
+      adminBuffer = "";
+      clearTimeout(adminEntryTimer);
+      return;
+    }
+
+    if (event.key === "Backspace") {
+      event.preventDefault();
+      adminBuffer = adminBuffer.slice(0, -1);
+      return;
+    }
+
+    if (event.key.length === 1) {
+      event.preventDefault();
+      adminBuffer += event.key.toLowerCase();
+
+      if (!adminPhrase.startsWith(adminBuffer)) {
+        adminBuffer = event.key.toLowerCase() === "f" ? "f" : "";
+      }
+
+      if (adminBuffer === adminPhrase) {
+        adminEntryActive = false;
+        adminBuffer = "";
+        clearTimeout(adminEntryTimer);
+        $("adminSize").value = String(CONFIG.FILE_SIZE_MB);
+        $("adminStatus").textContent =
+          "Admin settings unlocked. Current size: " + CONFIG.FILE_SIZE_MB + " MB (maximum 25 MB).";
+        $("adminPanel").classList.remove("hidden");
+        $("adminPanel").scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    }
+  });
+
+  $("applyAdminSize").addEventListener("click", function () {
+    const selected = Number($("adminSize").value);
+    if (!Number.isInteger(selected) || selected < 1 || selected > CONFIG.MAX_FILE_SIZE_MB) {
+      $("adminStatus").textContent = "Enter a whole number from 1 to " + CONFIG.MAX_FILE_SIZE_MB + " MB.";
+      return;
+    }
+
+    CONFIG.FILE_SIZE_MB = selected;
+    updateDisplayedSize(selected);
+
+    // A changed size requires fresh agreement and verification.
+    $("consent").checked = false;
+    $("captcha").checked = false;
+    $("captcha").disabled = true;
+    $("verifyStatus").textContent = "The size changed. Agree to the updated download terms to enable verification.";
+    $("adminStatus").textContent = "Applied: " + selected + " MB. The agreement has been reset.";
+  });
 
   $("chatForm").addEventListener("submit", function (event) {
     event.preventDefault();
