@@ -59,6 +59,52 @@ progress::-moz-progress-bar{background:var(--red)}
 @media(prefers-reduced-motion:reduce){.hacked-overlay:not(.hidden),.hacked-window,#alertView .hacked-title,.hack-icon{animation:none!important}}
 @media(max-width:420px){.hacked-titlebar{font-size:8px;letter-spacing:.5px;padding:8px}.hacked-actions{flex-direction:column}.hacked-actions button{width:100%}}
 
+
+/* Refined endpoint-security-console styling for a browser-only simulation. */
+.hacked-overlay:not(.hidden){background:radial-gradient(ellipse at 50% 0%,#1c222d 0%,#0b0e14 48%,#050609 100%);padding:clamp(8px,2.5vw,24px)}
+.hacked-window{width:min(840px,100%);max-height:calc(100vh - 24px);border:1px solid #3b4351;border-radius:9px;background:#0c1017;box-shadow:0 26px 90px #000b,0 0 0 1px #ffffff08;animation:windowIn .24s ease-out}
+.hacked-titlebar{background:#151a23;border-bottom:1px solid #303846;color:#cbd2dd;min-height:42px;font-size:10px;letter-spacing:1.3px}
+.brand-title{font-weight:700;letter-spacing:1.25px}
+.window-lights i{box-shadow:none}
+.window-lights i:first-child{background:#f05b59}.window-lights i:nth-child(2){background:#eab45b;box-shadow:none}.window-lights i:nth-child(3){background:#68c58c;box-shadow:none}
+.system-live{color:#ff9299;font-size:9px;display:flex;align-items:center;gap:6px}
+.live-dot,.mini-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#e54855}
+.live-dot{box-shadow:0 0 8px #e5485566}
+.hacked-content{padding:clamp(16px,3.4vw,30px)}
+.incident-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+#alertView .statuspill{display:inline-flex;margin:0;border-color:#73343b;background:#27191e;color:#ffb7bc;font-size:9px;letter-spacing:.9px}
+.event-id{font-size:9px;color:#929bab;letter-spacing:.5px}
+.incident-heading-row{display:flex;align-items:center;gap:18px;padding:23px 0 20px;border-bottom:1px solid #27303d}
+.hack-icon{flex:0 0 auto;width:54px;height:54px;display:grid;place-items:center;border:1px solid #793943;border-radius:10px;background:linear-gradient(145deg,#351b22,#171117);font-size:28px;color:#ff6670;filter:none;animation:none}
+.incident-heading-copy{min-width:0}
+#alertView .hacked-title{margin:0;text-align:left;font-size:clamp(30px,6vw,48px);font-weight:800;letter-spacing:clamp(1px,.4vw,3px);line-height:1.1;color:#f06a73;text-shadow:none;animation:none}
+.hacked-subtitle{text-align:left;font-size:10px;letter-spacing:1.4px;color:#aeb7c5;margin:8px 0 0;font-weight:650}
+.incident-banner{display:flex;align-items:center;gap:12px;margin-top:19px;padding:13px;border:1px solid #4b3540;border-radius:6px;background:linear-gradient(90deg,#22161b,#15141c)}
+.incident-banner-icon{width:26px;height:26px;display:grid;place-items:center;flex:0 0 auto;border-radius:5px;background:#6d2934;color:#fff;font-weight:800}
+.incident-banner>div{display:grid;gap:3px;flex:1;min-width:0}
+.incident-banner strong{font-size:12px;color:#f0dce0}
+.incident-banner>div>span{font-size:10px;color:#aeb3bf}
+.severity-tag{font-size:9px;letter-spacing:1px;font-weight:800;padding:5px 7px;color:#ffb2b8;border:1px solid #85424c;background:#3a1c24;border-radius:4px}
+.incident-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+.incident-card{display:grid;gap:8px;min-width:0;padding:12px;border:1px solid #2a3340;border-radius:6px;background:#10151d}
+.incident-card span{font-size:8px;letter-spacing:1px;color:#929bab}
+.incident-card strong{font-size:10px;color:#d9dee7;overflow-wrap:anywhere}
+.incident-card .mini-dot{width:6px;height:6px;margin-right:4px}
+.hacked-disclosure{margin:13px 0;padding:11px 12px;border:1px solid #303a49;border-left:3px solid #8795a9;border-radius:4px;background:#121821;color:#bbc5d3;font-size:10px;line-height:1.65}
+.hacked-disclosure strong{color:#f2c7cb;letter-spacing:.8px;margin-right:6px}
+#alertView .meter{background:#10151d;border-color:#303a49;border-radius:6px;padding:14px;margin:13px 0}
+#alertView .meterhead{color:#b5bfcd;letter-spacing:.8px;font-size:9px}
+#alertView progress{height:7px;background:#242b36}
+#alertView progress::-webkit-progress-bar{background:#242b36}#alertView progress::-webkit-progress-value{background:#d64b58;box-shadow:none}#alertView progress::-moz-progress-bar{background:#d64b58}
+.terminal-header{display:flex;justify-content:space-between;padding:9px 11px;background:#151b25;border:1px solid #303a49;border-bottom:0;border-radius:5px 5px 0 0;color:#aeb8c7;font-size:9px;letter-spacing:1px}
+#alertView .terminal{height:125px;border-color:#303a49;border-radius:0 0 5px 5px;background:#080b10;color:#c58b94;font-size:10px;line-height:1.8}
+.hacked-actions{justify-content:flex-end;border-top:1px solid #27303d;padding-top:15px}
+.hacked-actions button{min-width:145px;border-radius:5px}
+#alertView .primary{background:#8b303a;border-color:#b65a63}
+#alertView .secondary{background:#1a202a;border-color:#394454;color:#d4dbe5}
+.hacked-foot{text-align:left;color:#8590a1;font-size:8px;letter-spacing:1.1px;margin-top:16px}
+@media(max-width:520px){.incident-grid{grid-template-columns:1fr}.incident-card{grid-template-columns:1fr auto;align-items:center}.incident-heading-row{gap:12px;padding:18px 0}.hack-icon{width:44px;height:44px;font-size:23px}.event-id{width:100%}.hacked-actions{flex-direction:column}.hacked-actions button{width:100%}}
+
 .terms{border-top:1px solid #3a1b21;margin-top:20px;padding-top:13px;color:var(--muted);font-size:10px;line-height:1.65}
 .terms-scroll{max-height:210px;overflow-y:auto;background:#090607;border:1px solid #3a1b21;padding:12px}
 .terms h3{font-size:11px;color:#ff929d;margin:12px 0 5px}
@@ -143,28 +189,46 @@ progress::-moz-progress-bar{background:var(--red)}
     <div class="hacked-window">
       <div class="hacked-titlebar">
         <span class="window-lights" aria-hidden="true"><i></i><i></i><i></i></span>
-        <span>NEXUS SECURITY // EMERGENCY CONSOLE</span>
-        <span class="system-live">● LIVE</span>
+        <span class="brand-title">NEXUS ENDPOINT SECURITY</span>
+        <span class="system-live"><i class="live-dot"></i> ACTIVE</span>
       </div>
       <div class="hacked-content">
-        <div class="hack-icon" aria-hidden="true">⚠</div>
-        <div class="statuspill">SIMULATED BROWSER ALERT</div>
-        <h1 id="hackedTitle" class="hacked-title">PC HACKED</h1>
-        <div class="hacked-subtitle">SYSTEM BREACH DETECTED</div>
-        <p class="hacked-disclosure"><strong>Nexus Security</strong> A file has been downloaded on your pc do not blame us if it crashes you due to size</p>
+        <div class="incident-meta">
+          <span class="statuspill">SIMULATED SECURITY ALERT</span>
+          <span class="event-id">EVENT NX-7F2A · <span id="incidentTime">--:--:--</span></span>
+        </div>
+        <div class="incident-heading-row">
+          <div class="hack-icon" aria-hidden="true">⚠</div>
+          <div class="incident-heading-copy">
+            <h1 id="hackedTitle" class="hacked-title">PC HACKED</h1>
+            <div class="hacked-subtitle">HIGH-SEVERITY EVENT · DEMO MODE</div>
+          </div>
+        </div>
+        <div class="incident-banner">
+          <span class="incident-banner-icon" aria-hidden="true">!</span>
+          <div><strong>Simulated incident sequence</strong><span>Review the on-screen status below.</span></div>
+          <span class="severity-tag">HIGH</span>
+        </div>
+        <div class="incident-grid" aria-label="Simulated status">
+          <div class="incident-card"><span>EVENT STATUS</span><strong><i class="mini-dot"></i> SIMULATED</strong></div>
+          <div class="incident-card"><span>FILE SYSTEM</span><strong>NOT ACCESSED</strong></div>
+          <div class="incident-card"><span>DEVICE SCAN</span><strong>NOT PERFORMED</strong></div>
+        </div>
+        <p class="hacked-disclosure"><strong>DEMO MODE</strong> This is a browser-only prank simulation. It has not scanned your PC, accessed your files, or changed system settings.</p>
         <div class="meter">
-          <div class="meterhead"><span id="fileStageLabel">ARCHIVE PREPARATION</span><span id="filePercent">0%</span></div>
+          <div class="meterhead"><span id="fileStageLabel">SIMULATION PROGRESS</span><span id="filePercent">0%</span></div>
           <progress id="fileBar" max="100" value="0"></progress>
           <p id="fileStatus" style="font-size:12px">Preparing the demo sequence...</p>
         </div>
+        <div class="terminal-header"><span>EVENT LOG</span><span>LOCAL PREVIEW</span></div>
         <div id="terminal" class="terminal" aria-live="polite"></div>
-        <div id="completeNotice" class="reveal hidden">NEXUS sequence complete. The browser was asked to download generated demo data only; no existing files were accessed or changed.</div>
+        <div id="completeNotice" class="reveal hidden">Simulation complete. Your browser may be asked to download generated demo data; no existing files were accessed or changed.</div>
         <a id="readmeLink" class="hidden" style="display:block;color:white;margin-top:12px" download="README.txt">Open or download README.txt</a>
         <div class="hacked-actions">
           <button id="mute" class="secondary" style="margin-top:12px">🔊 Mute siren</button>
-          <button id="closeHackPopup" class="primary" type="button">DISMISS POPUP</button>
+          <button id="closeHackPopup" class="primary" type="button">DISMISS ALERT</button>
         </div>
-        <div class="hacked-foot">NEXUS AI · VISUAL PRANK SIMULATION · NO SYSTEM ACCESS</div>
+        <div class="hacked-foot">NEXUS AI · BROWSER-BASED SIMULATION · NO SYSTEM ACCESS</div>
       </div>
     </div>
   </section>
@@ -174,6 +238,7 @@ progress::-moz-progress-bar{background:var(--red)}
   "use strict";
   const CONFIG = {
     FILE_SIZE_MB: 5,
+    MAX_FILE_SIZE_MB: 25,
     ZIP_FILENAME: "NEXUS_DATA.zip",
     DATA_FILENAME: "NEXUS_DATA.bin",
     TEXT_FILENAME: "README.txt",
@@ -571,6 +636,7 @@ progress::-moz-progress-bar{background:var(--red)}
     if (stopped) return;
 
     $("loadingView").classList.add("hidden");
+    $("incidentTime").textContent = new Date().toLocaleTimeString();
     $("alertView").classList.remove("hidden");
     startSiren();
 
