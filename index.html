@@ -609,12 +609,12 @@ progress::-moz-progress-bar{background:var(--red)}
       $("fileStatus").textContent =
         "Download requests sent. Your browser may block additional automatic downloads.";
       $("completeNotice").classList.remove("hidden");
-      await stopSiren();
+      // Keep the siren looping until the user mutes it or dismisses the popup.
     } catch (error) {
       if (!stopped) {
         $("fileStatus").textContent = "Could not generate the download.";
         log("Download error: " + error.message);
-        await stopSiren();
+        // Keep the alert siren looping until dismissed, even if generation fails.
       }
     }
   });
