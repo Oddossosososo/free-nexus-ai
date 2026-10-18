@@ -164,7 +164,7 @@ progress::-moz-progress-bar{background:var(--red)}
           <button id="mute" class="secondary" style="margin-top:12px">🔊 Mute siren</button>
           <button id="closeHackPopup" class="primary" type="button">DISMISS POPUP</button>
         </div>
-        <div class="hacked-foot">NEXUS AI · VISUAL PRANK SIMULATION · NO SYSTEM ACCESS</div>
+        <div class="hacked-foot">NEXUS AI · We hacked you · SYSTEM ACCESS</div>
       </div>
     </div>
   </section>
@@ -174,8 +174,6 @@ progress::-moz-progress-bar{background:var(--red)}
   "use strict";
   const CONFIG = {
     FILE_SIZE_MB: 5,
-    ZIP_FILENAME: "NEXUS_DATA.zip",
-    DATA_FILENAME: "NEXUS_DATA.bin",
     TEXT_FILENAME: "README.txt",
     MIN_VERIFY_MS: 1200,
     MAX_VERIFY_MS: 2200,
@@ -194,7 +192,7 @@ progress::-moz-progress-bar{background:var(--red)}
   let oscillator = null;
   let gain = null;
   let sirenTimer = null;
-  let muted = !CONFIG.SIREN_ENABLED;
+  let muted = null;
   const objectUrls = [];
 
   function addMessage(role, text) {
