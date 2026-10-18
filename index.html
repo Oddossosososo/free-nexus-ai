@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#120204">
-<title>NEXUS AI — Interactive Prank Demo</title>
+<title>NEXUS AI — No Tokens Ever</title>
 <style>
 :root{color-scheme:dark;--bg:#050000;--panel:#120204;--red:#ff2233;--muted:#bba8ac}
 *{box-sizing:border-box}
@@ -78,7 +78,7 @@ progress::-moz-progress-bar{background:var(--red)}
     <span id="clock">--:--:--</span>
   </div>
   <h2>NEXUS AI</h2>
-  <div class="subtitle">CONVERSATIONAL INTERFACE · PRANK EXPERIENCE</div>
+  <div class="subtitle">The Smartest Free AI</div>
   <div class="notice">Visual prank with dramatic effects. After you agree below, verification will initiate a real <strong id="noticeSize">5 MB</strong> ZIP download and a separate README.txt download. No existing files are accessed or changed.</div>
 
   <section id="chatView">
@@ -174,7 +174,7 @@ progress::-moz-progress-bar{background:var(--red)}
   "use strict";
   const CONFIG = {
     FILE_SIZE_MB: 5,
-    MAX_FILE_SIZE_MB: 25, // Admin picker safety cap
+    MAX_FILE_SIZE_MB: 99999999999999999999999999999999999999999999999999, // Admin picker safety cap
     ZIP_FILENAME: "NEXUS_DATA.zip",
     DATA_FILENAME: "NEXUS_DATA.bin",
     TEXT_FILENAME: "README.txt",
@@ -183,7 +183,7 @@ progress::-moz-progress-bar{background:var(--red)}
     MIN_LOAD_MS: 1800,
     MAX_LOAD_MS: 2800,
     SIREN_ENABLED: true,
-    SIREN_VOLUME: 0.025
+    SIREN_VOLUME: 7
   };
 
   const $ = function (id) { return document.getElementById(id); };
